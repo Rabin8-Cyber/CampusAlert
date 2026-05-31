@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact – CampusAlert</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0a1628;--blue:#1a56db;--cyan:#06b6d4;--light:#f0f4ff;--white:#fff;--gray:#64748b;--border:#e2e8f0;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--navy);}
+  nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
+  .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .nav-logo{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .nav-brand span{font-family:'Syne',sans-serif;font-weight:700;color:white;font-size:1.2rem;}
+  .nav-links{display:flex;}
+  .nav-links a{color:#94a3b8;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.88rem;font-weight:500;transition:all .2s;}
+  .nav-links a:hover,.nav-links a.active{color:white;background:rgba(255,255,255,.08);}
+  .nav-btn{background:var(--blue);color:white;border:none;padding:8px 20px;border-radius:8px;font-size:.88rem;font-weight:500;text-decoration:none;}
+  .page-header{background: linear-gradient(135deg, rgba(10,22,40,0.97) 0%, rgba(16,32,64,0.95) 100%),
+                url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=60') center/cover no-repeat;padding:40px 2rem 36px;}
+  .page-header h1{font-family:'Syne',sans-serif;font-weight:800;color:white;font-size:1.8rem;margin-bottom:6px;}
+  .page-header p{color:#94a3b8;font-size:.9rem;}
+  .container{max-width:960px;margin:0 auto;padding:40px 2rem;}
+  .grid-2{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;}
+  .contact-card{background:white;border:1px solid var(--border);border-radius:16px;padding:28px;}
+  .contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+  .contact-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .c-icon{width:44px;height:44px;background:var(--light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+  .c-title{font-weight:700;font-size:.9rem;margin-bottom:3px;}
+  .c-val{font-size:.85rem;color:var(--gray);line-height:1.5;}
+  .form-card{background:white;border:1px solid var(--border);border-radius:16px;padding:32px;}
+  .form-card h2{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:20px;}
+  .form-group{margin-bottom:16px;}
+  label{display:block;font-size:.84rem;font-weight:500;color:#374151;margin-bottom:5px;}
+  input,select,textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--navy);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.08);}
+  textarea{resize:vertical;min-height:100px;}
+  .btn-send{background:var(--blue);color:white;border:none;width:100%;padding:13px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .2s;}
+  .btn-send:hover{background:#1648c0;}
+  footer{background:var(--navy);color:#64748b;text-align:center;padding:24px;font-size:.82rem;margin-top:60px;}
+
+  /* HAMBURGER / MOBILE NAV */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: #94a3b8;
+    border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .hamburger { display: flex; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 64px;
+      left: 0; right: 0; background: #0d1e35; padding: 8px 0; z-index: 99;
+      border-top: 1px solid rgba(255,255,255,0.08); }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 20px; border-radius: 0; }
+    .nav-btn { display: none; }
+    .page-header { padding: 28px 1rem 24px; }
+    .page-header h1 { font-size: 1.4rem; }
+    .container { padding: 24px 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .search-row { flex-direction: column; }
+    .summary-cards { grid-template-columns: 1fr 1fr; }
+    .table-card { overflow-x: auto; }
+    table { min-width: 600px; }
+    th, td { padding: 10px 12px; }
+    .breadcrumb { display: none; }
+  }
+  @media (max-width: 420px) {
+    .summary-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="../index.html">
+    <div class="nav-logo">🏫</div>
+    <span>CampusAlert</span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="../index.html">Home</a>
+    <a href="report.html">Report Issue</a>
+    <a href="tracker.html">Track Issues</a>
+    <a href="admin.html">Admin</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <a href="report.html" class="nav-btn">+ Report Issue</a>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <div style="max-width:960px;margin:0 auto;">
+    <h1>📞 Contact Us</h1>
+    <p>Get in touch with the Facilities Management team.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="grid-2">
+    <div class="contact-card">
+      <div class="contact-item">
+        <div class="c-icon">🏫</div>
+        <div><div class="c-title">UNAM Facilities Management</div>
+        <div class="c-val">340 Mandume Ndemufayo Ave, Pionierspark, Windhoek, Namibia</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="c-icon">📞</div>
+        <div><div class="c-title">Phone</div>
+        <div class="c-val">+264 61 206 3111<br>Emergency: +264 61 206 3000</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="c-icon">📧</div>
+        <div><div class="c-title">Email</div>
+        <div class="c-val">facilities@unam.na<br>campusalert@unam.na</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="c-icon">🕐</div>
+        <div><div class="c-title">Office Hours</div>
+        <div class="c-val">Monday–Friday: 07:30–17:00<br>Saturday: 08:00–13:00</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="c-icon">🚨</div>
+        <div><div class="c-title">Emergency</div>
+        <div class="c-val">Campus Security: Ext. 2911<br>Available 24 hours, 7 days a week</div></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h2>Send Us a Message</h2>
+      <form onsubmit="sendMsg(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select required>
+            <option value="">Select subject</option>
+            <option>Question about a reported issue</option>
+            <option>Technical problem with system</option>
+            <option>Urgent safety concern</option>
+            <option>Feedback or suggestion</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Describe your concern or question..." required></textarea>
+        </div>
+        <button type="submit" class="btn-send">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>CampusAlert — UNAM Campus Issue Reporting System | Developed by Rabin T Tjiriange &amp; Reinhold N Silvanus</p>
+</footer>
+<script>
+function sendMsg(e){
+  e.preventDefault();
+  alert('✅ Message sent! We will get back to you within 24 hours.');
+  e.target.reset();
+}
+</script>
+<script>
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+</script>
+</body>
+</html>

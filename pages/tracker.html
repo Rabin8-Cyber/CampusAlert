@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Issues – CampusAlert</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1628;--blue:#1a56db;--cyan:#06b6d4;--light:#f0f4ff;--white:#fff;--gray:#64748b;--border:#e2e8f0; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--navy);}
+  nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
+  .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .nav-logo{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .nav-brand span{font-family:'Syne',sans-serif;font-weight:700;color:white;font-size:1.2rem;}
+  .nav-links{display:flex;}
+  .nav-links a{color:#94a3b8;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.88rem;font-weight:500;transition:all .2s;}
+  .nav-links a:hover,.nav-links a.active{color:white;background:rgba(255,255,255,.08);}
+  .nav-btn{background:var(--blue);color:white;border:none;padding:8px 20px;border-radius:8px;font-size:.88rem;font-weight:500;text-decoration:none;}
+  .page-header{background: linear-gradient(135deg, rgba(10,22,40,0.97) 0%, rgba(16,32,64,0.95) 100%),
+                url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=60') center/cover no-repeat;padding:40px 2rem 36px;}
+  .page-header h1{font-family:'Syne',sans-serif;font-weight:800;color:white;font-size:1.8rem;margin-bottom:6px;}
+  .page-header p{color:#94a3b8;font-size:.9rem;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .breadcrumb a{color:#64748b;text-decoration:none;font-size:.82rem;}
+  .breadcrumb span{color:#475569;font-size:.82rem;}
+  .container{max-width:1100px;margin:0 auto;padding:36px 2rem;}
+
+  /* Search bar */
+  .search-section{background:white;border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:28px;}
+  .search-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .search-input{flex:1;min-width:200px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:.9rem;}
+  .search-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.08);}
+  select.filter{border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:.88rem;background:white;color:var(--navy);cursor:pointer;}
+  .btn-search{background:var(--blue);color:white;border:none;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .2s;}
+  .btn-search:hover{background:#1648c0;}
+
+  /* Summary cards */
+  .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px;}
+  .sum-card{background:white;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:14px;}
+  .sum-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+  .sum-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;}
+  .sum-lbl{font-size:.78rem;color:var(--gray);}
+
+  /* Table */
+  .table-card{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .table-header{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .table-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;}
+  table{width:100%;border-collapse:collapse;}
+  th{background:#f8fafc;padding:12px 20px;text-align:left;font-size:.8rem;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+  td{padding:14px 20px;font-size:.875rem;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:#f8fafc;}
+  .status-badge{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:20px;}
+  .status-open{background:#fff7ed;color:#c2410c;}
+  .status-prog{background:#eff6ff;color:#1d4ed8;}
+  .status-done{background:#f0fdf4;color:#15803d;}
+  .priority-dot{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;font-weight:500;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot-low{background:#10b981;}
+  .dot-medium{background:#f59e0b;}
+  .dot-high{background:#ef4444;}
+  .btn-view{background:none;border:1px solid var(--border);color:var(--blue);padding:5px 12px;border-radius:6px;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;}
+  .btn-view:hover{background:var(--blue);color:white;border-color:var(--blue);}
+
+  /* Modal */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:white;border-radius:16px;padding:36px;max-width:560px;width:90%;max-height:90vh;overflow-y:auto;}
+  .modal h2{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:20px;}
+  .detail-row{display:flex;margin-bottom:12px;gap:12px;}
+  .detail-lbl{font-size:.8rem;font-weight:600;color:var(--gray);width:130px;flex-shrink:0;padding-top:2px;}
+  .detail-val{font-size:.88rem;color:var(--navy);}
+  .modal-close{background:none;border:1.5px solid var(--border);padding:10px 24px;border-radius:8px;font-size:.88rem;cursor:pointer;margin-top:20px;}
+
+  footer{background:var(--navy);color:#64748b;text-align:center;padding:24px;font-size:.82rem;margin-top:40px;}
+
+  /* HAMBURGER / MOBILE NAV */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: #94a3b8;
+    border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .hamburger { display: flex; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 64px;
+      left: 0; right: 0; background: #0d1e35; padding: 8px 0; z-index: 99;
+      border-top: 1px solid rgba(255,255,255,0.08); }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 20px; border-radius: 0; }
+    .nav-btn { display: none; }
+    .page-header { padding: 28px 1rem 24px; }
+    .page-header h1 { font-size: 1.4rem; }
+    .container { padding: 24px 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .search-row { flex-direction: column; }
+    .summary-cards { grid-template-columns: 1fr 1fr; }
+    .table-card { overflow-x: auto; }
+    table { min-width: 600px; }
+    th, td { padding: 10px 12px; }
+    .breadcrumb { display: none; }
+  }
+  @media (max-width: 420px) {
+    .summary-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="../index.html">
+    <div class="nav-logo">🏫</div>
+    <span>CampusAlert</span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="../index.html">Home</a>
+    <a href="report.html">Report Issue</a>
+    <a href="tracker.html" class="active">Track Issues</a>
+    <a href="admin.html">Admin</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="report.html" class="nav-btn">+ Report Issue</a>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span style="color:#94a3b8">Track Issues</span>
+    </div>
+    <h1>🔍 Issue Tracker</h1>
+    <p>Search and monitor all reported campus issues and their resolution status.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="search-section">
+    <div class="search-row">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search by ticket number, title, or location..." oninput="filterIssues()">
+      <select class="filter" id="filterStatus" onchange="filterIssues()">
+        <option value="">All Statuses</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+      <select class="filter" id="filterCat" onchange="filterIssues()">
+        <option value="">All Categories</option>
+        <option>Infrastructure / Building</option>
+        <option>Safety &amp; Security</option>
+        <option>Cleaning &amp; Sanitation</option>
+        <option>Technology / IT</option>
+        <option>Electrical / Plumbing</option>
+      </select>
+      <select class="filter" id="filterPriority" onchange="filterIssues()">
+        <option value="">All Priorities</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="sum-card">
+      <div class="sum-icon" style="background:#fff7ed;">🔴</div>
+      <div><div class="sum-num" id="countOpen">0</div><div class="sum-lbl">Open</div></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:#eff6ff;">🔄</div>
+      <div><div class="sum-num" id="countProg">0</div><div class="sum-lbl">In Progress</div></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:#f0fdf4;">✅</div>
+      <div><div class="sum-num" id="countDone">0</div><div class="sum-lbl">Resolved</div></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:#fef2f2;">⚡</div>
+      <div><div class="sum-num" id="countHigh">0</div><div class="sum-lbl">High Priority</div></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <span class="table-title">All Reported Issues</span>
+      <span id="resultCount" style="font-size:.82rem;color:var(--gray);"></span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="issuesTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">Issue Details</h2>
+    <div id="modalContent"></div>
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<footer>
+  <p>CampusAlert — UNAM Campus Issue Reporting System | Developed by Rabin T Tjiriange &amp; Reinhold N Silvanus</p>
+</footer>
+
+<script>
+// Default demo data + user submitted
+const defaultIssues = [
+  {ticket:'CA-2024-1042',name:'Amalia Nghifindaka',email:'a.nghifindaka@unam.na',role:'Student',
+   category:'Infrastructure / Building',building:'Block A – Lecture Halls',location:'Room LT-04',
+   title:'Broken Ceiling Tiles – Room LT-04',description:'Several ceiling tiles have collapsed near the front of the lecture theatre, creating a safety hazard for students.',priority:'high',status:'In Progress',date:'29/05/2024'},
+  {ticket:'CA-2024-1041',name:'Thomas Hamutenya',email:'t.hamutenya@unam.na',role:'Lecturer',
+   category:'Safety & Security',building:'Block B – Administration',location:'2nd Floor Corridor',
+   title:'Faulty Fire Exit Light – Block B',description:'Emergency exit sign on 2nd floor is not illuminated.',priority:'high',status:'Open',date:'31/05/2024'},
+  {ticket:'CA-2024-1038',name:'Grace Shikongo',email:'g.shikongo@unam.na',role:'Student',
+   category:'Technology / IT',building:'Block D – Labs',location:'CS Lab, Room 204',
+   title:'Projector Not Working – CS Lab',description:'Main projector non-functional for a week.',priority:'medium',status:'Resolved',date:'25/05/2024'},
+  {ticket:'CA-2024-1035',name:'Johannes Mwenyo',email:'j.mwenyo@unam.na',role:'Staff',
+   category:'Cleaning & Sanitation',building:'Cafeteria',location:'Main Cafeteria',
+   title:'Overflowing Bins – Cafeteria',description:'Waste bins overflowing, causing hygiene concern.',priority:'medium',status:'Open',date:'30/05/2024'},
+  {ticket:'CA-2024-1030',name:'Maria Nakale',email:'m.nakale@unam.na',role:'Student',
+   category:'Infrastructure / Building',building:'Library',location:'Level 2 Reading Room',
+   title:'Leaking Roof – Library Reading Room',description:'Water seeping through ceiling during rain.',priority:'high',status:'In Progress',date:'28/05/2024'},
+  {ticket:'CA-2024-1025',name:'Selma Haindongo',email:'s.haindongo@unam.na',role:'Student',
+   category:'Infrastructure / Building',building:'Block C – Residences',location:'Ground Floor Bathroom',
+   title:'Broken Door Lock – Women\'s Bathroom',description:'Lock on main stall is broken.',priority:'medium',status:'Resolved',date:'24/05/2024'},
+  {ticket:'CA-2024-1020',name:'David Nghipunduka',email:'d.nghipunduka@unam.na',role:'Lecturer',
+   category:'Electrical / Plumbing',building:'Block A – Lecture Halls',location:'LT-02',
+   title:'Flickering Lights – LT-02',description:'Lights flicker and occasionally go off during lectures.',priority:'low',status:'Resolved',date:'20/05/2024'},
+  {ticket:'CA-2024-1015',name:'Hilma Amweelo',email:'h.amweelo@unam.na',role:'Student',
+   category:'Safety & Security',building:'Parking Area',location:'North Parking Lot',
+   title:'Broken CCTV Camera – Parking Lot',description:'Camera near entrance has been vandalized.',priority:'high',status:'Open',date:'22/05/2024'},
+];
+
+function getAllIssues() {
+  const saved = JSON.parse(localStorage.getItem('campusIssues') || '[]');
+  return [...saved, ...defaultIssues];
+}
+
+function statusClass(s) {
+  if (s === 'Open') return 'status-open';
+  if (s === 'In Progress') return 'status-prog';
+  return 'status-done';
+}
+function statusIcon(s) {
+  if (s === 'Open') return '🔴';
+  if (s === 'In Progress') return '🔄';
+  return '✅';
+}
+function priorityHtml(p) {
+  const cls = {low:'low',medium:'medium',high:'high'}[p] || 'low';
+  const label = p ? p.charAt(0).toUpperCase()+p.slice(1) : 'Low';
+  return `<span class="priority-dot"><span class="dot dot-${cls}"></span>${label}</span>`;
+}
+
+function filterIssues() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const st = document.getElementById('filterStatus').value;
+  const cat = document.getElementById('filterCat').value;
+  const pri = document.getElementById('filterPriority').value;
+  const all = getAllIssues();
+  return all.filter(i =>
+    (!q || i.ticket.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || (i.location||'').toLowerCase().includes(q)) &&
+    (!st || i.status === st) &&
+    (!cat || i.category === cat) &&
+    (!pri || i.priority === pri)
+  );
+}
+
+function renderTable() {
+  const data = filterIssues();
+  const tbody = document.getElementById('issuesTableBody');
+  tbody.innerHTML = data.length === 0
+    ? '<tr><td colspan="8" style="text-align:center;color:var(--gray);padding:32px;">No issues found matching your filters.</td></tr>'
+    : data.map((i,idx) => `<tr>
+        <td style="font-family:'Syne',sans-serif;font-weight:600;font-size:.8rem;color:var(--blue);">${i.ticket}</td>
+        <td style="font-weight:500;max-width:200px;">${i.title}</td>
+        <td style="font-size:.82rem;color:var(--gray);">${i.category}</td>
+        <td style="font-size:.82rem;">${i.location || i.building}</td>
+        <td>${priorityHtml(i.priority)}</td>
+        <td><span class="status-badge ${statusClass(i.status)}">${statusIcon(i.status)} ${i.status}</span></td>
+        <td style="font-size:.8rem;color:var(--gray);">${i.date}</td>
+        <td><button class="btn-view" onclick="showDetail(${idx})">View</button></td>
+      </tr>`).join('');
+
+  const all = getAllIssues();
+  document.getElementById('countOpen').textContent = all.filter(i=>i.status==='Open').length;
+  document.getElementById('countProg').textContent = all.filter(i=>i.status==='In Progress').length;
+  document.getElementById('countDone').textContent = all.filter(i=>i.status==='Resolved').length;
+  document.getElementById('countHigh').textContent = all.filter(i=>i.priority==='high').length;
+  document.getElementById('resultCount').textContent = `Showing ${data.length} of ${all.length} issues`;
+  window._filteredIssues = data;
+}
+
+function showDetail(idx) {
+  const i = window._filteredIssues[idx];
+  document.getElementById('modalTitle').textContent = i.title;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="detail-row"><span class="detail-lbl">Ticket No.</span><span class="detail-val" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue);">${i.ticket}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Status</span><span class="detail-val"><span class="status-badge ${statusClass(i.status)}">${statusIcon(i.status)} ${i.status}</span></span></div>
+    <div class="detail-row"><span class="detail-lbl">Priority</span><span class="detail-val">${priorityHtml(i.priority)}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Category</span><span class="detail-val">${i.category}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Building</span><span class="detail-val">${i.building}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Location</span><span class="detail-val">${i.location}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Reported By</span><span class="detail-val">${i.name} (${i.role})</span></div>
+    <div class="detail-row"><span class="detail-lbl">Date Submitted</span><span class="detail-val">${i.date}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Description</span><span class="detail-val">${i.description}</span></div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+renderTable();
+document.getElementById('searchInput').addEventListener('input', renderTable);
+document.getElementById('filterStatus').addEventListener('change', renderTable);
+document.getElementById('filterCat').addEventListener('change', renderTable);
+document.getElementById('filterPriority').addEventListener('change', renderTable);
+</script>
+<script>
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+</script>
+</body>
+</html>

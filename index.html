@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusAlert – Issue Reporting System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --blue: #1a56db;
+    --cyan: #06b6d4;
+    --light: #f0f4ff;
+    --white: #ffffff;
+    --gray: #64748b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); }
+
+  /* NAV */
+  nav {
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo { width: 36px; height: 36px; background: var(--blue); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .nav-brand span { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white);
+    font-size: 1.2rem; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 0; }
+  .nav-links a { color: #94a3b8; text-decoration: none; padding: 8px 16px; border-radius: 6px;
+    font-size: 0.88rem; font-weight: 500; transition: all 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(255,255,255,0.08); }
+  .nav-btn { background: var(--blue); color: var(--white); border: none; padding: 8px 20px;
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer;
+    font-size: 0.88rem; text-decoration: none; transition: background 0.2s; }
+  .nav-btn:hover { background: #1648c0; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, rgba(10,22,40,0.93) 0%, rgba(16,32,64,0.88) 60%, rgba(13,31,60,0.95) 100%),
+                url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1600&q=80') center/cover no-repeat;
+    padding: 80px 2rem 90px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(26,86,219,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(6,182,212,0.12) 0%, transparent 50%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(26,86,219,0.2); border: 1px solid rgba(26,86,219,0.4);
+    color: #93c5fd; padding: 6px 16px; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 500; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--white); line-height: 1.15; margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 span { color: var(--cyan); }
+  .hero p { color: #94a3b8; font-size: 1.05rem; max-width: 520px; margin: 0 auto 36px; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+  .btn-primary { background: var(--blue); color: var(--white); padding: 14px 32px;
+    border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { background: #1648c0; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,86,219,0.4); }
+  .btn-outline { background: transparent; color: var(--white); padding: 14px 32px;
+    border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    border: 1.5px solid rgba(255,255,255,0.25); transition: all 0.2s; }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+
+  /* STATS */
+  .stats { background: var(--white); padding: 40px 2rem;
+    display: flex; justify-content: center; gap: 0; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border); }
+  .stat { text-align: center; padding: 16px 40px; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--blue); }
+  .stat-lbl { font-size: 0.82rem; color: var(--gray); margin-top: 2px; }
+
+  /* MAIN CONTENT */
+  .main { max-width: 1160px; margin: 0 auto; padding: 48px 2rem; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700;
+    margin-bottom: 24px; color: var(--navy); }
+  .section-title span { color: var(--blue); }
+
+  /* ISSUE CARDS */
+  .issues-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .issue-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: box-shadow 0.2s; cursor: pointer;
+  }
+  .issue-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .issue-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+  .issue-type { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .type-infra { background: #fef3c7; color: #92400e; }
+  .type-safety { background: #fee2e2; color: #991b1b; }
+  .type-clean { background: #dcfce7; color: #166534; }
+  .type-tech { background: #ede9fe; color: #5b21b6; }
+  .status-badge { font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; display: flex; align-items: center; gap: 4px; }
+  .status-open { background: #fff7ed; color: #c2410c; }
+  .status-prog { background: #eff6ff; color: #1d4ed8; }
+  .status-done { background: #f0fdf4; color: #15803d; }
+  .issue-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
+  .issue-desc { font-size: 0.83rem; color: var(--gray); line-height: 1.5; margin-bottom: 12px; }
+  .issue-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; }
+  .issue-loc { display: flex; align-items: center; gap: 4px; }
+
+  /* CATEGORIES */
+  .categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 40px; }
+  .cat-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--navy); }
+  .cat-card:hover { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,0.08); transform: translateY(-2px); }
+  .cat-icon { font-size: 2rem; margin-bottom: 8px; }
+  .cat-name { font-weight: 600; font-size: 0.85rem; }
+  .cat-count { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+
+  /* ALERT BANNER */
+  .alert-banner { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;
+    padding: 14px 20px; margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+  .alert-banner span { font-size: 0.88rem; color: #991b1b; }
+
+  footer {
+    background: var(--navy); color: #64748b; text-align: center;
+    padding: 28px; font-size: 0.82rem; margin-top: 60px;
+  }
+  footer a { color: #94a3b8; text-decoration: none; }
+
+  /* HAMBURGER / MOBILE NAV */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: #94a3b8;
+    border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .hamburger { display: flex; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 64px;
+      left: 0; right: 0; background: #0d1e35; padding: 8px 0; z-index: 99;
+      border-top: 1px solid rgba(255,255,255,0.08); }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 20px; border-radius: 0; }
+    .nav-btn { display: none; }
+    .hero { padding: 48px 1rem 56px; }
+    .hero h1 { font-size: 1.7rem; }
+    .stats { gap: 0; }
+    .stat { padding: 14px 20px; border-right: none; border-bottom: 1px solid var(--border); width: 50%; }
+    .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+    .stat:last-child, .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+    .main { padding: 28px 1rem; }
+    .categories { grid-template-columns: repeat(3, 1fr); }
+    .issues-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .categories { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">🏫</div>
+    <span>CampusAlert</span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html" class="active">Home</a>
+    <a href="pages/report.html">Report Issue</a>
+    <a href="pages/tracker.html">Track Issues</a>
+    <a href="pages/admin.html">Admin</a>
+    <a href="pages/contact.html">Contact</a>
+  </div>
+  <a href="pages/report.html" class="nav-btn">+ Report Issue</a>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🎓 UNAM Campus Management System</div>
+  <h1>Report Campus Issues<br><span>Fast. Simple. Effective.</span></h1>
+  <p>Help keep our campus safe and functional. Submit maintenance requests, safety concerns, and facility issues directly to the responsible teams.</p>
+  <div class="hero-btns">
+    <a href="pages/report.html" class="btn-primary">📋 Submit a Report</a>
+    <a href="pages/tracker.html" class="btn-outline">🔍 Track My Issue</a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">247</div><div class="stat-lbl">Issues Reported</div></div>
+  <div class="stat"><div class="stat-num">189</div><div class="stat-lbl">Issues Resolved</div></div>
+  <div class="stat"><div class="stat-num">94%</div><div class="stat-lbl">Resolution Rate</div></div>
+  <div class="stat"><div class="stat-num">2.3d</div><div class="stat-lbl">Avg. Response Time</div></div>
+</div>
+
+<div class="main">
+
+  <div class="alert-banner">
+    ⚠️ <span><strong>Notice:</strong> Water supply in Block C will be interrupted on Saturday 8AM–12PM for scheduled maintenance.</span>
+  </div>
+
+  <h2 class="section-title">Report by <span>Category</span></h2>
+  <div class="categories">
+    <a href="pages/report.html?cat=infrastructure" class="cat-card">
+      <div class="cat-icon">🏗️</div>
+      <div class="cat-name">Infrastructure</div>
+      <div class="cat-count">84 reports</div>
+    </a>
+    <a href="pages/report.html?cat=safety" class="cat-card">
+      <div class="cat-icon">🔒</div>
+      <div class="cat-name">Safety</div>
+      <div class="cat-count">51 reports</div>
+    </a>
+    <a href="pages/report.html?cat=cleaning" class="cat-card">
+      <div class="cat-icon">🧹</div>
+      <div class="cat-name">Cleaning</div>
+      <div class="cat-count">62 reports</div>
+    </a>
+    <a href="pages/report.html?cat=technology" class="cat-card">
+      <div class="cat-icon">💻</div>
+      <div class="cat-name">Technology</div>
+      <div class="cat-count">38 reports</div>
+    </a>
+    <a href="pages/report.html?cat=electrical" class="cat-card">
+      <div class="cat-icon">⚡</div>
+      <div class="cat-name">Electrical</div>
+      <div class="cat-count">29 reports</div>
+    </a>
+    <a href="pages/report.html?cat=other" class="cat-card">
+      <div class="cat-icon">📌</div>
+      <div class="cat-name">Other</div>
+      <div class="cat-count">22 reports</div>
+    </a>
+  </div>
+
+  <h2 class="section-title">Recent <span>Issues</span></h2>
+  <div class="issues-grid">
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-infra">Infrastructure</span>
+        <span class="status-badge status-prog">🔄 In Progress</span>
+      </div>
+      <div class="issue-title">Broken Ceiling Tiles – Room LT-04</div>
+      <div class="issue-desc">Several ceiling tiles have collapsed near the front of the lecture theatre, creating a safety hazard.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 Block A, LT-04</span>
+        <span>2 days ago</span>
+      </div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-safety">Safety</span>
+        <span class="status-badge status-open">🔴 Open</span>
+      </div>
+      <div class="issue-title">Faulty Fire Exit Light – Block B</div>
+      <div class="issue-desc">The emergency exit sign on the 2nd floor corridor is not illuminated and needs urgent replacement.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 Block B, 2nd Floor</span>
+        <span>5 hours ago</span>
+      </div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-tech">Technology</span>
+        <span class="status-badge status-done">✅ Resolved</span>
+      </div>
+      <div class="issue-title">Projector Not Working – CS Lab</div>
+      <div class="issue-desc">The main projector in the Computer Science lab has been non-functional for a week.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 CS Lab, Block D</span>
+        <span>Resolved 1 day ago</span>
+      </div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-clean">Cleaning</span>
+        <span class="status-badge status-open">🔴 Open</span>
+      </div>
+      <div class="issue-title">Overflowing Bins – Cafeteria Area</div>
+      <div class="issue-desc">Waste bins in the main cafeteria have not been emptied and are overflowing, causing hygiene concerns.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 Main Cafeteria</span>
+        <span>1 day ago</span>
+      </div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-infra">Infrastructure</span>
+        <span class="status-badge status-prog">🔄 In Progress</span>
+      </div>
+      <div class="issue-title">Leaking Roof – Library Reading Room</div>
+      <div class="issue-desc">Water seeping through ceiling during rain, damaging books and creating slip hazard on the floor.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 Library, Level 2</span>
+        <span>3 days ago</span>
+      </div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-card-top">
+        <span class="issue-type type-infra">Infrastructure</span>
+        <span class="status-badge status-done">✅ Resolved</span>
+      </div>
+      <div class="issue-title">Broken Door Lock – Women's Bathroom</div>
+      <div class="issue-desc">The lock on the main women's bathroom stall is broken and cannot be secured from inside.</div>
+      <div class="issue-meta">
+        <span class="issue-loc">📍 Block C, Ground Floor</span>
+        <span>Resolved 3 days ago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>CampusAlert — UNAM Campus Issue Reporting System &nbsp;|&nbsp;
+    <a href="pages/contact.html">Contact Support</a> &nbsp;|&nbsp;
+    Developed by Rabin T Tjiriange (221012176) &amp; Reinhold N Silvanus (226127400) — IT Project Management 2025
+  </p>
+</footer>
+
+<script>
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+</script>
+</body>
+</html>
